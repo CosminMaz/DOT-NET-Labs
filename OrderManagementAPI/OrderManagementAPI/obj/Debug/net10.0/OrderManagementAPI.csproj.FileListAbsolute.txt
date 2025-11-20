@@ -1,0 +1,9 @@
+/home/cossi/Code/DOT-NET-Labs/OrderManagementAPI/OrderManagementAPI/obj/Debug/net10.0/OrderManagementAPI.csproj.AssemblyReference.cache
+/home/cossi/Code/DOT-NET-Labs/OrderManagementAPI/OrderManagementAPI/obj/Debug/net10.0/rpswa.dswa.cache.json
+/home/cossi/Code/DOT-NET-Labs/OrderManagementAPI/OrderManagementAPI/obj/Debug/net10.0/OrderManagementAPI.GeneratedMSBuildEditorConfig.editorconfig
+/home/cossi/Code/DOT-NET-Labs/OrderManagementAPI/OrderManagementAPI/obj/Debug/net10.0/OrderManagementAPI.AssemblyInfoInputs.cache
+/home/cossi/Code/DOT-NET-Labs/OrderManagementAPI/OrderManagementAPI/obj/Debug/net10.0/OrderManagementAPI.AssemblyInfo.cs
+/home/cossi/Code/DOT-NET-Labs/OrderManagementAPI/OrderManagementAPI/obj/Debug/net10.0/OrderManagementAPI.csproj.CoreCompileInputs.cache
+/home/cossi/Code/DOT-NET-Labs/OrderManagementAPI/OrderManagementAPI/obj/Debug/net10.0/OrderManagementAPI.MvcApplicationPartsAssemblyInfo.cs
+/home/cossi/Code/DOT-NET-Labs/OrderManagementAPI/OrderManagementAPI/obj/Debug/net10.0/OrderManagementAPI.MvcApplicationPartsAssemblyInfo.cache
+/home/cossi/Code/DOT-NET-Labs/OrderManagementAPI/OrderManagementAPI/obj/Debug/net10.0/OrderManagementAPI.sourcelink.json

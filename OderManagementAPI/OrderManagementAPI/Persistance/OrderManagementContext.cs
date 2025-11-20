@@ -4,11 +4,7 @@ using OrderManagementAPI.Features.Order;
 
 namespace OrderManagementAPI.Persistance;
 
-public class OrderManagementContext : DbContext
+public class OrderManagementContext(DbContextOptions<OrderManagementContext> options) : DbContext(options)
 {
-    public OrderManagementContext(DbContextOptions<OrderManagementContext> options) : base(options)
-    {
-    }
-
     public DbSet<Order> Orders { get; set; }
 }

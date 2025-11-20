@@ -1,4 +1,5 @@
 using System;
+using MediatR;
 
 namespace OrderManagementAPI.Features.Order
 {
@@ -10,5 +11,5 @@ namespace OrderManagementAPI.Features.Order
         decimal Price,
         DateTime PublishedDate,
         string? CoverImageUrl,
-        int StockQuantity = 1);
+        int StockQuantity = 1) : IRequest<OrderProfileDto>;
 }

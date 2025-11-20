@@ -1,1 +1,12 @@
-{"Version":1,"Hash":"YZ8kh5XPBcvAFIkxKxWeU99g/IaUGQQYy6Myw9s70p8=","Source":"OderManagementAPI","BasePath":"_content/OderManagementAPI","Mode":"Default","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}
+{
+  "Version": 1,
+  "Hash": "CNBVefSVr33RnfRFYzL+WsYJu8mDZ7wC9aMu9vqgXUM=",
+  "Source": "OrderManagementAPI",
+  "BasePath": "_content/OrderManagementAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
