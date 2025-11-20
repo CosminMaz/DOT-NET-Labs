@@ -1,6 +1,0 @@
-@OderManagementAPI_HostAddress = http://localhost:5196
-
-GET {{OderManagementAPI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
