@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using OrderManagementAPI.Persistance;
 using OrderManagementAPI.Common;
 using System.Diagnostics;
-using Microsoft.Extensions.Logging;
 
 namespace OrderManagementAPI.Features.Order
 {

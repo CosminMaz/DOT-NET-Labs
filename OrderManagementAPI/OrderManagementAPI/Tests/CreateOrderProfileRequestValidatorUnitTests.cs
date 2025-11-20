@@ -4,12 +4,8 @@ using FluentValidation.TestHelper;
 using OrderManagementAPI.Features.Order;
 using OrderManagementAPI.Features.Order.Validators;
 using OrderManagementAPI.Persistance;
-using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
-using System.Threading.Tasks;
-using System;
-using System.Linq;
+// Removed unused using Microsoft.Extensions.Logging;
 
 namespace OrderManagementAPI.Tests;
 
@@ -31,7 +27,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void Title_ShouldHaveError_WhenEmpty()
     {
-        var request = new CreateOrderProfileRequest { Title = "" };
+        var request = new CreateOrderProfileRequest { Title = "", Author = "Test Author", ISBN = "1234567890" };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.Title)
               .WithErrorMessage("The order title is required.");
@@ -40,7 +36,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void Title_ShouldHaveError_WhenTooLong()
     {
-        var request = new CreateOrderProfileRequest { Title = new string('a', 201) };
+        var request = new CreateOrderProfileRequest { Title = new string('a', 201), Author = "Test Author", ISBN = "1234567890" };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.Title)
               .WithErrorMessage("The title must not exceed 200 characters.");
@@ -49,7 +45,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void Title_ShouldHaveError_WhenInappropriate()
     {
-        var request = new CreateOrderProfileRequest { Title = "This is a badword1 title" };
+        var request = new CreateOrderProfileRequest { Title = "This is a badword1 title", Author = "Test Author", ISBN = "1234567890" };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.Title)
               .WithErrorMessage("The title contains inappropriate content.");
@@ -68,7 +64,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
 
         _mockContext.Setup(c => c.Orders).Returns(mockDbSet.Object);
 
-        var request = new CreateOrderProfileRequest { Title = "Unique Title", Author = "John Doe" };
+        var request = new CreateOrderProfileRequest { Title = "Unique Title", Author = "John Doe", ISBN = "1234567890" };
 
         // Act
         var result = await _validator.TestValidateAsync(request);
@@ -83,7 +79,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void Author_ShouldHaveError_WhenEmpty()
     {
-        var request = new CreateOrderProfileRequest { Author = "" };
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "", ISBN = "1234567890" };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.Author)
               .WithErrorMessage("The author's name is required.");
@@ -92,7 +88,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void Author_ShouldHaveError_WhenInvalidCharacters()
     {
-        var request = new CreateOrderProfileRequest { Author = "John D@e" };
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "John D@e", ISBN = "1234567890" };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.Author)
               .WithErrorMessage("The author's name contains invalid characters. Only letters, spaces, hyphens, apostrophes, and dots are allowed.");
@@ -103,7 +99,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void ISBN_ShouldHaveError_WhenEmpty()
     {
-        var request = new CreateOrderProfileRequest { ISBN = "" };
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "Test Author", ISBN = "" };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.ISBN)
               .WithErrorMessage("The ISBN is required.");
@@ -112,7 +108,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void ISBN_ShouldHaveError_WhenInvalidFormat()
     {
-        var request = new CreateOrderProfileRequest { ISBN = "12345" }; // Too short
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "Test Author", ISBN = "12345" }; // Too short
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.ISBN)
               .WithErrorMessage("The ISBN must be a valid 10 or 13 digit format (may contain hyphens).");
@@ -122,7 +118,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     public async Task ISBN_ShouldHaveError_WhenNotUnique()
     {
         // Arrange
-        var existingOrder = new Order { ISBN = "978-1234567890", Id = Guid.NewGuid() };
+        var existingOrder = new Order { Title = "Existing Title", Author = "Existing Author", ISBN = "978-1234567890", Id = Guid.NewGuid() };
         var mockDbSet = new Mock<DbSet<Order>>();
         mockDbSet.As<IQueryable<Order>>().Setup(m => m.Provider).Returns(new[] { existingOrder }.AsQueryable().Provider);
         mockDbSet.As<IQueryable<Order>>().Setup(m => m.Expression).Returns(new[] { existingOrder }.AsQueryable().Expression);
@@ -131,7 +127,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
 
         _mockContext.Setup(c => c.Orders).Returns(mockDbSet.Object);
 
-        var request = new CreateOrderProfileRequest { ISBN = "978-1234567890" };
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "Test Author", ISBN = "978-1234567890" };
 
         // Act
         var result = await _validator.TestValidateAsync(request);
@@ -146,7 +142,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void Category_ShouldHaveError_WhenInvalidEnumValue()
     {
-        var request = new CreateOrderProfileRequest { Category = (OrderCategory)999 }; // Invalid enum value
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "Test Author", ISBN = "1234567890", Category = (OrderCategory)999 }; // Invalid enum value
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.Category)
               .WithErrorMessage("The category must be a valid enum value.");
@@ -157,7 +153,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void Price_ShouldHaveError_WhenZero()
     {
-        var request = new CreateOrderProfileRequest { Price = 0 };
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "Test Author", ISBN = "1234567890", Price = 0 };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.Price)
               .WithErrorMessage("The price must be greater than zero.");
@@ -166,7 +162,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void Price_ShouldHaveError_WhenTooHigh()
     {
-        var request = new CreateOrderProfileRequest { Price = 10000.01m };
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "Test Author", ISBN = "1234567890", Price = 10000.01m };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.Price)
               .WithErrorMessage("The price must be less than $10,000.");
@@ -177,7 +173,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void PublishedDate_ShouldHaveError_WhenInFuture()
     {
-        var request = new CreateOrderProfileRequest { PublishedDate = DateTime.Today.AddDays(1) };
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "Test Author", ISBN = "1234567890", PublishedDate = DateTime.Today.AddDays(1) };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.PublishedDate)
               .WithErrorMessage("The published date cannot be in the future.");
@@ -188,7 +184,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void StockQuantity_ShouldHaveError_WhenNegative()
     {
-        var request = new CreateOrderProfileRequest { StockQuantity = -1 };
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "Test Author", ISBN = "1234567890", StockQuantity = -1 };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.StockQuantity)
               .WithErrorMessage("The stock quantity cannot be negative.");
@@ -199,7 +195,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void CoverImageUrl_ShouldHaveError_WhenInvalidUrlFormat()
     {
-        var request = new CreateOrderProfileRequest { CoverImageUrl = "not-a-url" };
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "Test Author", ISBN = "1234567890", CoverImageUrl = "not-a-url" };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.CoverImageUrl)
               .WithErrorMessage("The cover image URL must be a valid HTTP/HTTPS URL ending with an image extension (.jpg, .jpeg, .png, .gif, .webp).");
@@ -208,7 +204,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void CoverImageUrl_ShouldHaveError_WhenInvalidExtension()
     {
-        var request = new CreateOrderProfileRequest { CoverImageUrl = "http://example.com/image.txt" };
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "Test Author", ISBN = "1234567890", CoverImageUrl = "http://example.com/image.txt" };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.CoverImageUrl)
               .WithErrorMessage("The cover image URL must be a valid HTTP/HTTPS URL ending with an image extension (.jpg, .jpeg, .png, .gif, .webp).");
@@ -219,7 +215,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void TechnicalOrder_Price_ShouldHaveError_WhenBelowMinimum()
     {
-        var request = new CreateOrderProfileRequest { Category = OrderCategory.Technical, Price = 19.99m };
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "Test Author", ISBN = "1234567890", Category = OrderCategory.Technical, Price = 19.99m };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.Price)
               .WithErrorMessage("Technical orders must have a price of at least $20.00.");
@@ -228,7 +224,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void TechnicalOrder_Title_ShouldHaveError_WhenNoTechnicalKeywords()
     {
-        var request = new CreateOrderProfileRequest { Category = OrderCategory.Technical, Title = "A simple story" };
+        var request = new CreateOrderProfileRequest { Category = OrderCategory.Technical, Title = "A simple story", Author = "Test Author", ISBN = "1234567890" };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.Title)
               .WithErrorMessage("Technical orders must contain technical keywords in the title.");
@@ -237,7 +233,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void TechnicalOrder_PublishedDate_ShouldHaveError_WhenTooOld()
     {
-        var request = new CreateOrderProfileRequest { Category = OrderCategory.Technical, PublishedDate = DateTime.UtcNow.AddYears(-6) };
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "Test Author", ISBN = "1234567890", Category = OrderCategory.Technical, PublishedDate = DateTime.UtcNow.AddYears(-6) };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.PublishedDate)
               .WithErrorMessage("Technical orders must be published within the last 5 years.");
@@ -246,7 +242,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void ChildrensOrder_Price_ShouldHaveError_WhenAboveMaximum()
     {
-        var request = new CreateOrderProfileRequest { Category = OrderCategory.Children, Price = 50.01m };
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "Test Author", ISBN = "1234567890", Category = OrderCategory.Children, Price = 50.01m };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.Price)
               .WithErrorMessage("Children's orders must have a price of no more than $50.00.");
@@ -255,7 +251,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void ChildrensOrder_Title_ShouldHaveError_WhenInappropriate()
     {
-        var request = new CreateOrderProfileRequest { Category = OrderCategory.Children, Title = "Children's badword1 book" };
+        var request = new CreateOrderProfileRequest { Category = OrderCategory.Children, Title = "Children's badword1 book", Author = "Test Author", ISBN = "1234567890" };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.Title)
               .WithErrorMessage("The title contains inappropriate content.");
@@ -264,7 +260,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void FictionOrder_Author_ShouldHaveError_WhenTooShort()
     {
-        var request = new CreateOrderProfileRequest { Category = OrderCategory.Fiction, Author = "A.B." }; // 4 chars
+        var request = new CreateOrderProfileRequest { Title = "Test Title", ISBN = "1234567890", Category = OrderCategory.Fiction, Author = "A.B." }; // 4 chars
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.Author)
               .WithErrorMessage("Fiction orders require the author's name to be at least 5 characters long.");
@@ -273,7 +269,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
     [Fact]
     public void ExpensiveOrder_StockQuantity_ShouldHaveError_WhenTooHigh()
     {
-        var request = new CreateOrderProfileRequest { Price = 100.01m, StockQuantity = 21 };
+        var request = new CreateOrderProfileRequest { Title = "Test Title", Author = "Test Author", ISBN = "1234567890", Price = 100.01m, StockQuantity = 21 };
         var result = _validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.StockQuantity)
               .WithErrorMessage("Expensive orders (>$100) must have a limited stock (≤20 units).");
@@ -288,7 +284,7 @@ public class CreateOrderProfileRequestValidatorUnitTests
         // Arrange
         var mockDbSet = new Mock<DbSet<Order>>();
         // Simulate 500 orders already existing today
-        var ordersToday = Enumerable.Range(0, 500).Select(i => new Order { Id = Guid.NewGuid(), PublishedDate = DateTime.Today }).AsQueryable();
+        var ordersToday = Enumerable.Range(0, 500).Select(i => new Order { Id = Guid.NewGuid(), Title = $"Title {i}", Author = $"Author {i}", ISBN = $"ISBN{i}", PublishedDate = DateTime.Today }).AsQueryable();
         mockDbSet.As<IQueryable<Order>>().Setup(m => m.Provider).Returns(ordersToday.Provider);
         mockDbSet.As<IQueryable<Order>>().Setup(m => m.Expression).Returns(ordersToday.Expression);
         mockDbSet.As<IQueryable<Order>>().Setup(m => m.ElementType).Returns(ordersToday.ElementType);
@@ -309,9 +305,9 @@ public class CreateOrderProfileRequestValidatorUnitTests
             x => x.Log(
                 It.Is<LogLevel>(l => l == LogLevel.Warning),
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((o, t) => o.ToString().Contains("Daily order addition limit exceeded")),
-                It.IsAny<Exception>(),
-                It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+                It.Is<string>(o => o.Contains("Daily order addition limit exceeded")), // Removed explicit cast
+                It.IsAny<Exception?>(),
+                It.IsAny<Func<string, Exception?, string>>()),
             Times.Once);
     }
 }

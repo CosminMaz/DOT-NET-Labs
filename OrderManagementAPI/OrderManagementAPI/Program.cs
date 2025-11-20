@@ -7,7 +7,7 @@ using OrderManagementAPI.Features.Order;
 using OrderManagementAPI.Features.Order.Validators;
 using OrderManagementAPI.Persistance;
 using System.Diagnostics;
-using Microsoft.Extensions.Logging;
+
 using OrderManagementAPI;
 using OrderManagementAPI.Common;
 

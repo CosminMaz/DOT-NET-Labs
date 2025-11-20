@@ -43,7 +43,7 @@ public class ValidISBNAttribute : ValidationAttribute, IClientModelValidator
         }
 
         MergeAttribute(context.Attributes, "data-val", "true");
-        MergeAttribute(context.Attributes, "data-val-isbn", ErrorMessage);
+        MergeAttribute(context.Attributes, "data-val-isbn", ErrorMessage!); // Use null-forgiving operator
         MergeAttribute(context.Attributes, "data-val-isbn-pattern", IsbnPattern); // Pass pattern for client-side regex
     }
 

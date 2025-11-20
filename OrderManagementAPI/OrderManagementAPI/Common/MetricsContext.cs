@@ -1,5 +1,3 @@
-using System.Threading;
-
 namespace OrderManagementAPI.Common
 {
     public static class MetricsContext

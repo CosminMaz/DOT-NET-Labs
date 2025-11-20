@@ -12,11 +12,6 @@ public class AuthorInitialsResolver : IValueResolver<Order, OrderProfileDto, str
             return "?";
         }
 
-        if (names.Length >= 2)
-        {
-            return $"{names[0][0]}{names[names.Length - 1][0]}".ToUpper();
-        }
-
-        return $"{names[0][0]}".ToUpper();
+        return names.Length >= 2 ? $"{names[0][0]}{names[^1][0]}".ToUpper() : $"{names[0][0]}".ToUpper();
     }
 }

@@ -1,5 +1,4 @@
 using AutoMapper;
-using System.Globalization;
 namespace OrderManagementAPI.Features.Order.Resolvers;
 
 public class PriceFormatterResolver : IValueResolver<Order, OrderProfileDto, string>

@@ -2,7 +2,6 @@ using Xunit;
 using Moq;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using OrderManagementAPI.Persistance;
 using OrderManagementAPI.Features.Order;
 using OrderManagementAPI.Features.Order.Mappings;

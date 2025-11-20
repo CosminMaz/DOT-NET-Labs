@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using OrderManagementAPI.Features.Order;
 
 namespace OrderManagementAPI
